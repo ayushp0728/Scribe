@@ -17,7 +17,7 @@ function HomePage() {
     <div className="home-container">
       {/* Left side: Big Heading */}
       <div className="left-container">
-        <h1>Scribe</h1>
+        <h1>Scribe.</h1>
       </div>
 
       {/* Right side: Instructions */}

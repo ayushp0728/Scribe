@@ -21,7 +21,6 @@
     align-items: center;
     font-family: 'Poppins', sans-serif; /* Use Poppins as the font */
     font-weight: bold; /* Make the text bold */
-    font-size: 60px;
   }
   
   .right-container {
@@ -34,7 +33,7 @@
   }
   
   h1 {
-    font-size: 4rem;
+    font-size: 10rem;
     font-weight: bold;
     margin-bottom: 20px;
   }
