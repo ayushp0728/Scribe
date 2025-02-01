@@ -1,22 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import HomePage from './components/HomePage';
+import AddBookPage from './components/AddBook';
+import BookSettingsPage from './components/BookSettings';
+import Header from './components/Header';
 import './App.css';
 
+
 function App() {
-  const [message, setMessage] = useState('');
-
-  useEffect(() => {
-    // Example API call to FastAPI backend
-    axios.get('http://localhost:8000/')
-      .then(response => setMessage(response.data.message))
-      .catch(error => console.error('Error fetching data:', error));
-  }, []);
-
   return (
-    <div className="App">
-      <h1>Book Scanner App</h1>
-      <p>Backend says: {message}</p>
-    </div>
+    <Router>
+      <div className="pt-16"> {/* This padding ensures the page content is below the fixed header */}
+        <Header />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/add-book" element={<AddBookPage />} />
+          <Route path="/book-settings" element={<BookSettingsPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

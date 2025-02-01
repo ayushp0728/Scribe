@@ -1,0 +1,58 @@
+/* HomePage.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+.home-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #313131;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.171) 2px, transparent 0);
+    background-size: 30px 30px;
+    background-position: -5px -5px;
+    color: white;
+    padding: 20px;
+  }
+  
+  .left-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif; /* Use Poppins as the font */
+    font-weight: bold; /* Make the text bold */
+    font-size: 60px;
+  }
+  
+  .right-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 4rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  ol {
+    list-style-type: decimal;
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 1.25rem;
+    color: #bbb;
+  }
+  
+  ol li {
+    margin-bottom: 12px;
+  }
+  
