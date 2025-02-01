@@ -27,12 +27,12 @@ function HomePage() {
           To get started, follow these simple steps:
         </p>
         <ol>
-          <li>Create a new book in your library.</li>
-          <li>Add settings to customize your book scanning process.</li>
+          <li>Create a new collection in your library.</li>
+          <li>Add settings to customize your collection process.</li>
           <li>Press start to begin flipping the pages and capturing images.</li>
         </ol>
         <p>
-          Let's get started by clicking the "Add Book" button in the menu!
+          Let's get started by clicking the "Add Collection" button in the menu!
         </p>
       </div>
     </div>
