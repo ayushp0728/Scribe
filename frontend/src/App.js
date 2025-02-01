@@ -4,6 +4,7 @@ import HomePage from './components/HomePage';
 import AddBookPage from './components/AddBook';
 import BookSettingsPage from './components/BookSettings';
 import Header from './components/Header';
+import Library from './components/Library';
 import './App.css';
 
 
@@ -14,6 +15,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/library" element={<Library />} />
           <Route path="/add-book" element={<AddBookPage />} />
           <Route path="/book-settings" element={<BookSettingsPage />} />
         </Routes>
