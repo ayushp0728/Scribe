@@ -80,7 +80,7 @@
 }
 
 .submit-button:hover {
-    background-color: #45a049;
+    background-color: #a04545;
 }
 
 /* Right-side content */
@@ -148,3 +148,49 @@
       transform: rotateY(-180deg);
     }
   }
+  .book-type-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .book-type-buttons {
+    display: flex;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    overflow: hidden;
+    background-color: #f9f9f9; /* Light background for the button group */
+  }
+  
+  .book-type-buttons button {
+    flex: 1; /* Buttons fill equal space */
+    padding: 15px;
+    border: none;
+    background-color: transparent;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-right: 1px solid #ccc;
+  }
+  
+  .book-type-buttons button:last-child {
+    border-right: none; /* Remove right border for the last button */
+  }
+  
+  .book-type-buttons button:hover {
+    background-color: #e0e0e0; /* Light hover effect */
+  }
+  
+  .book-type-buttons button.active {
+    background-color: #e66868;
+    color: white;
+  }
+  
+  .book-type-buttons button:focus {
+    outline: none;
+  }
+  

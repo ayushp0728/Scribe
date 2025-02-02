@@ -18,6 +18,7 @@ function HomePage() {
       {/* Left side: Big Heading */}
       <div className="left-container">
         <h1>Scribe.</h1>
+        <h2>Bring your past to the Digital Age.</h2>
       </div>
 
       {/* Right side: Instructions */}

@@ -5,7 +5,7 @@ import AddBookPage from './components/AddBook';
 import BookSettingsPage from './components/BookSettings';
 import Header from './components/Header';
 import Library from './components/Library';
-
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 
 function App() {

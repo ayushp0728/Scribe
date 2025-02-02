@@ -7,7 +7,6 @@ function AddBookPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [bookType, setBookType] = useState('');
-  const [pdfUrl, setPdfUrl] = useState('');
   const [analyzeAI, setAnalyzeAI] = useState(false);
   const [loading, setLoading] = useState(true); // Start with loading as true
   const navigate = useNavigate();
@@ -22,7 +21,7 @@ function AddBookPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title || !description || !bookType || !pdfUrl) {
+    if (!title || !description || !bookType) {
       alert("Please fill out all fields!");
       return;
     }
@@ -36,7 +35,6 @@ function AddBookPage() {
           name: title,
           description,
           book_type: bookType,
-          bucket_link: pdfUrl,
           analyzeAI,
         });
 
@@ -53,7 +51,7 @@ function AddBookPage() {
 
   return (
     <div className="add-book-container">
-      <h1>Create Your Collection</h1>
+      <h3>Create Your Collection</h3>
 
       {/* Show loader while the form is being processed */}
       {loading ? (
@@ -90,29 +88,32 @@ function AddBookPage() {
             />
           </div>
 
-          {/* Book Type Input */}
-          <div className="input-group">
-            <label htmlFor="bookType">Book Type:</label>
-            <input
-              type="text"
-              id="bookType"
-              value={bookType}
-              onChange={(e) => setBookType(e.target.value)}
-              required
-            />
-          </div>
-
-          {/* PDF URL Input */}
-          <div className="input-group">
-            <label htmlFor="pdfUrl">PDF URL:</label>
-            <input
-              type="url"
-              id="pdfUrl"
-              value={pdfUrl}
-              onChange={(e) => setPdfUrl(e.target.value)}
-              required
-              placeholder="Enter PDF URL"
-            />
+          {/* Book Type Buttons */}
+          <div className="input-group book-type-group">
+            <label>Book Type:</label>
+            <div className="book-type-buttons">
+              <button
+                type="button"
+                className={bookType === 'notebook' ? 'active' : ''}
+                onClick={() => setBookType('notebook')}
+              >
+                Notebook
+              </button>
+              <button
+                type="button"
+                className={bookType === 'photobook' ? 'active' : ''}
+                onClick={() => setBookType('photobook')}
+              >
+                Photobook
+              </button>
+              <button
+                type="button"
+                className={bookType === 'general' ? 'active' : ''}
+                onClick={() => setBookType('general')}
+              >
+                General
+              </button>
+            </div>
           </div>
 
           {/* Checkbox for analyzing images with AI */}

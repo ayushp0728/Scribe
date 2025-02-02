@@ -11,17 +11,17 @@
     background-size: 30px 30px;
     background-position: -5px -5px;
     color: white;
-    padding: 20px;
+    padding: 10px;
   }
   
   .left-container {
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
+    flex-direction: column;    
     font-family: 'Poppins', sans-serif; /* Use Poppins as the font */
     font-weight: bold; /* Make the text bold */
-    scale: 4;
+
   }
   
   .right-container {
@@ -34,9 +34,13 @@
   }
   
   h1 {
-    font-size: 10rem;
+    font-size: 12rem;
     font-weight: bold;
-    margin-bottom: 20px;
+    transform: translateY(40px);
+  }
+  h2 {
+    transform:translateY(-120px);
+    font-size: 3rem;
   }
   
   p {
