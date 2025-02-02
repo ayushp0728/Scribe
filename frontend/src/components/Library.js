@@ -1,72 +1,62 @@
-import React from "react";
-import { Link } from "react-router-dom"; // to navigate to the "Add Book" page
-import './Library.css'; // Import the CSS file for styling
+import React, { useEffect, useState } from "react";
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
+import "./Library.css"; // Assuming your custom styles are here
 
 const Library = () => {
-  // Dummy data for collections, can be replaced with actual data from backend
-  const collections = [
-    { id: 1, name: "Collection 1", link: "/collection1" },
-    { id: 2, name: "Collection 2", link: "/collection2" },
-    { id: 3, name: "Collection 3", link: "/collection3" },
-    { id: 4, name: "Collection 4", link: "/collection4" },
-    // Add more collections here
-  ];
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true); // Track loading state
+
+  useEffect(() => {
+    // Simulate a delay of 3 seconds for the loader animation
+    const timer = setTimeout(async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "books"));
+        const booksList = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setBooks(booksList);
+        setLoading(false); // Set loading to false once the data is fetched
+      } catch (error) {
+        console.error("Error fetching books: ", error);
+        setLoading(false); // Even if there's an error, stop loading
+      }
+    }, 2000); // Delay for 3 seconds (3000 ms)
+
+    // Clean up the timer when the component unmounts
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="library-container">
-      <h1>My Collections</h1>
+      <h1>Welcome to your Library</h1>
 
-      {/* Display all collections */}
-      <div className="collections">
-        {collections.map((collection) => (
-          <div className="collection" key={collection.id}>
-            <h2>{collection.name}</h2>
-          </div>
-        ))}
-      </div>
-
-      {/* Custom button to trigger sub-buttons */}
-      <div className="wrapper">
-        {/* Hidden trigger input to control the animation */}
-        <input type="checkbox" id="toogle" className="hidden-trigger" />
-        <label htmlFor="toogle" className="circle">
-          <svg
-            className="svg"
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            width="48"
-            height="48"
-            version="1.1"
-            viewBox="0 0 48 48"
-          >
-            <image
-              width="48"
-              height="48"
-              xlinkHref="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAAbElEQVR4Ae3XwQnFQAiE4eVVsGAP1mkPFjwvQvYSWCQYCYGZv4Dv5MGB5ghcIiDQI+kCftCzNsAR8y5gYu2rwCBAgMBTgEC3rek2yQEtAZoDjso8AyaKexmIDJUZD40AAQIE0gwx449GgMC9/t0b7GTsa7J+AAAAAElFTkSuQmCC"
-            ></image>
-          </svg>
-        </label>
-
-        <div className="subs">
-          <Link to="/" className="sub-circle">
-            <button className="sub-circle">
-              <label htmlFor="sub1">Add Book</label>
-            </button>
-          </Link>
-
-          <Link to="/" className="sub-circle">
-            <button className="sub-circle">
-              <label htmlFor="sub2">View Books</label>
-            </button>
-          </Link>
-
-          <Link to="/" className="sub-circle">
-            <button className="sub-circle">
-              <label htmlFor="sub3">My Collections</label>
-            </button>
-          </Link>
+      {/* Show loader while fetching data */}
+      {loading ? (
+        <div className="loader">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
         </div>
-      </div>
+      ) : books.length > 0 ? (
+        <div className="book-grid">
+          {books.map((book) => (
+            <div key={book.id} className="book-card">
+              <h2>{book.name}</h2>
+              <p><strong>Type:</strong> {book.book_type}</p>
+              <p>{book.description}</p>
+              <a href={book.bucket_link} target="_blank" rel="noopener noreferrer">
+                View PDF
+              </a>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p>No books available.</p>
+      )}
     </div>
   );
 };

@@ -7,9 +7,9 @@ const Header = () => {
   return (
     <header className="header">
       <nav className="nav-container">
-        <h1 className="logo">
+        <p className="logo">
           <Link to="/" className="nav-link">Scribe</Link>
-        </h1>
+        </p>
         <div className="nav-links">
           <Link to="/add-book" className="nav-link">Add Collection</Link>
           <Link to="/library" className="nav-link">Library</Link>
