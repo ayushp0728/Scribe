@@ -1,0 +1,8 @@
+.terraform
+terraform.tfstate
+terraform.tfstate.backup
+terraform.tfvars
+.terraform.lock.hcl
+pics
+function-source.zip
+*.env

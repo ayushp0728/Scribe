@@ -85,6 +85,54 @@ async def websocket_endpoint(websocket: WebSocket):
 async def read_root():
     return {"message": "Hello, World!"}
 
+from google.cloud import storage
+from google.auth.exceptions import DefaultCredentialsError
+import os
+
+def upload_to_gcs(file_path, bucket_name):
+    """
+    Uploads a file to Google Cloud Storage.
+    
+    Args:
+        file_path (str): The path to the file to be uploaded.
+        bucket_name (str): The name of the GCS bucket.
+    
+    Returns:
+        str: A message indicating the result of the upload.
+    """
+    try:
+        # Initialize a client
+        storage_client = storage.Client()
+
+        # Define the destination blob name
+        destination_blob_name = os.path.basename(file_path)
+
+        # Create a bucket object
+        bucket = storage_client.bucket(bucket_name)
+
+        # Create a blob object from the bucket
+        blob = bucket.blob(destination_blob_name)
+
+        # Upload the file to GCS
+        blob.upload_from_filename(file_path)
+
+        return f"File {destination_blob_name} uploaded to {bucket_name}."
+
+    except DefaultCredentialsError:
+        return "Google Cloud credentials not found."
+    except Exception as e:
+        return f"Error uploading file: {e}"
+
+# Example usage
 if __name__ == "__main__":
     import uvicorn
+
+    # Example usage of upload_to_gcs function
+    file_path = "C:\\Users\\laugh\\OneDrive\\Desktop\\Scribe\\backend\\terraform\\Priyansh_Patel_Resume.pdf"
+    bucket_name = "scribe-main-bucket"
+    result = upload_to_gcs(file_path, bucket_name)
+    print(result)
+
     uvicorn.run(app)
+
+
