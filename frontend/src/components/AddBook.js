@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../firebase'; // Ensure the correct Firebase config import
 import './AddBook.css';
 
 function AddBookPage() {
@@ -9,7 +11,7 @@ function AddBookPage() {
   const [analyzeAI, setAnalyzeAI] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!title || !description || !bookType) {
@@ -17,15 +19,31 @@ function AddBookPage() {
       return;
     }
 
-    // Pass the data to the AddBookLive page through state
-    navigate('/addbooklive', {
-      state: {
-        title,
-        description,
-        bookType,
-        analyzeAI
-      }
-    });
+    const bookData = {
+      title,
+      description,
+      bookType,
+      analyzeAI,
+      createdAt: new Date().toISOString(),
+    };
+
+    try {
+        // Save to Firebase
+        const newDocRef = await addDoc(collection(db, 'books'), bookData);
+
+        // Get the document ID
+        const doc_id = newDocRef.id;
+
+        // Save to local storage
+        localStorage.setItem('currentBookData', JSON.stringify(bookData));
+        localStorage.setItem('currentBookDocId', doc_id)
+
+        // Navigate to AddBookLive with the book data
+        navigate('/addbooklive', { state: bookData });
+    } catch (error) {
+      console.error('Error adding document: ', error);
+      alert('Failed to create the collection. Please try again.');
+    }
   };
 
   return (

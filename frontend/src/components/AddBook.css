@@ -133,7 +133,7 @@
   .loader div:nth-child(5) {
     animation-delay: 0.75s;
   }
-  
+
   @keyframes loader {
     0% {
       transform: rotateY(0deg);
