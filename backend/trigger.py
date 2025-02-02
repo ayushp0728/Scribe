@@ -1,12 +1,14 @@
 # pip install fastapi python-dotenv uvicorn
 # uvicorn backend.main:app --reload
 
+import base64
 import logging
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os
 import asyncio
+import json
 
 # Load environment variables from .env file
 load_dotenv()
@@ -35,6 +37,11 @@ def image_to_bytes(image_path):
     with open(image_path, "rb") as image_file:
         return image_file.read()
 
+# Function to convert images to base64 string
+def image_to_base64(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode('utf-8')
+
 # Placeholder for the pipeline function
 async def pipeline_function(websocket: WebSocket):
     try:
@@ -42,16 +49,20 @@ async def pipeline_function(websocket: WebSocket):
             if image_file.lower().endswith(".jpg") or image_file.lower().endswith(".jpeg"):
                 image_path = os.path.join(image_directory, image_file)
                 logger.debug(f"Processing image: {image_path}")
-                image_bytes = image_to_bytes(image_path)
+                image_base64 = image_to_base64(image_path)
 
-                # Send to client
-                await websocket.send_bytes(image_bytes)
-                logger.debug(f"Sent image: {image_path}")
+                # Example JSON data
+                json_data = {
+                    "image_data": image_base64,
+                    "summary": f"This is a summary of the image, {image_file}"
+                }
+
+                # Send JSON data to client
+                await websocket.send_text(json.dumps(json_data))
+                logger.debug(f"Sent image and JSON data: {image_path}")
 
                 # Simulate processing time, obviously won't need once we use actual pipeline work
-                await asyncio.sleep(4)  # Simulate some processing time
-
-        await websocket.send_text("Pipeline processing completed.")
+                await asyncio.sleep(4)  # Simulate some processing time        await websocket.send_text("Pipeline processing completed.")
     except Exception as e:
         logger.error(f"Error in pipeline_function: {e}")
         await websocket.send_text(f"Error: {e}")
