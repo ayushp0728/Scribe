@@ -7,6 +7,8 @@ import BookSettingsPage from './components/BookSettings';
 import Header from './components/Header';
 import Library from './components/Library';
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import BookDetails from "./components/BookDetails";
+
 
 function App() {
   return (
@@ -18,7 +20,8 @@ function App() {
           <Route path="/library" element={<Library />} />
           <Route path="/add-book" element={<AddBookPage />} />
           <Route path="/addbooklive" element={<AddBookLivePage />} /> {/* Added AddBookLive route */}
-          <Route path="/book-settings" element={<BookSettingsPage />} />
+          <Route path="/book-settings" element={<BookSettingsPage />} />\
+          <Route path="/book/:bookId" element={<BookDetails />} />
         </Routes>
       </div>
     </Router>

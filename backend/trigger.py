@@ -1,21 +1,18 @@
-# pip install fastapi python-dotenv uvicorn
-# uvicorn backend.main:app --reload
-
+import os
+import sys
+import asyncio
 import base64
-import logging
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-import os
-import asyncio
-import json
+from loguru import logger
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Set up logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
+# Set up logging with loguru
+logger.remove()  # Remove the default logger
+logger.add(sys.stdout, level="DEBUG", format="{time:YYYY-MM-DD at HH:mm:ss} | {level} | {message}")
 
 app = FastAPI()
 
@@ -29,18 +26,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Store the path to your image directory or pipeline process here
-image_directory = "C:\\Users\\laugh\\OneDrive\\Desktop\\Scribe\\backend\\pics"
+# Store the path to your image directory here
+image_directory = "/Users/ayushpatel/Desktop/Scribe/backend/pics"
 
-# Function to convert images to bytes
-def image_to_bytes(image_path):
-    with open(image_path, "rb") as image_file:
-        return image_file.read()
-
-# Function to convert images to base64 string
+# Function to convert images to base64
 def image_to_base64(image_path):
     with open(image_path, "rb") as image_file:
-        return base64.b64encode(image_file.read()).decode('utf-8')
+        return base64.b64encode(image_file.read()).decode('utf-8')  # Encode to base64 string
 
 # Placeholder for the pipeline function
 async def pipeline_function(websocket: WebSocket):
@@ -49,28 +41,36 @@ async def pipeline_function(websocket: WebSocket):
             if image_file.lower().endswith(".jpg") or image_file.lower().endswith(".jpeg"):
                 image_path = os.path.join(image_directory, image_file)
                 logger.debug(f"Processing image: {image_path}")
-                image_base64 = image_to_base64(image_path)
+                
+                # Convert image to base64
+                base64_image = image_to_base64(image_path)
+                
+                # Create a text message (you can customize it for each image)
+                message = f"Here is image {image_file}, processed successfully."
 
-                # Example JSON data
-                json_data = {
-                    "image_data": image_base64,
-                    "summary": f"This is a summary of the image, {image_file}"
+                # Create JSON object with image data and message
+                data = {
+                    "image": base64_image,
+                    "message": message
                 }
+                
+                # Send JSON object to client
+                await websocket.send_json(data)
+                logger.debug(f"Sent image and message for: {image_path}")
+                
+                # Simulate processing time (for testing purposes)
+                await asyncio.sleep(4)  # Simulate some processing time
 
-                # Send JSON data to client
-                await websocket.send_text(json.dumps(json_data))
-                logger.debug(f"Sent image and JSON data: {image_path}")
-
-                # Simulate processing time, obviously won't need once we use actual pipeline work
-                await asyncio.sleep(4)  # Simulate some processing time        await websocket.send_text("Pipeline processing completed.")
+        await websocket.send_text("Pipeline processing completed.")
     except Exception as e:
         logger.error(f"Error in pipeline_function: {e}")
-        await websocket.send_text(f"Error: {e}")
+        await websocket.send_text(f"An error occurred during processing. Please try again later.")
 
 # WebSocket endpoint
 @app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
+async def websocket_endpoint(websocket: WebSocket, doc_id: str = Query(...)):
     logger.info("New WebSocket connection")
+    print(f"DocId == {doc_id}")
     await websocket.accept()
     try:
         await pipeline_function(websocket)
@@ -79,7 +79,7 @@ async def websocket_endpoint(websocket: WebSocket):
     except Exception as e:
         logger.error(f"Error in websocket_endpoint: {e}")
         await websocket.close(code=1001)
-        print(f"Error: {e}")
+        logger.error(f"Closing connection due to error: {e}")
 
 @app.get("/")
 async def read_root():
@@ -126,13 +126,4 @@ def upload_to_gcs(file_path, bucket_name):
 # Example usage
 if __name__ == "__main__":
     import uvicorn
-
-    # Example usage of upload_to_gcs function
-    file_path = "C:\\Users\\laugh\\OneDrive\\Desktop\\Scribe\\backend\\terraform\\Priyansh_Patel_Resume.pdf"
-    bucket_name = "scribe-main-bucket"
-    result = upload_to_gcs(file_path, bucket_name)
-    print(result)
-
-    uvicorn.run(app)
-
-
+    uvicorn.run(app, host="0.0.0.0", port=8000)  # Ensure correct host and port
